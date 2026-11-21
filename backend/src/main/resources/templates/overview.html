@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Websites · Homelab Analytics</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="page">
+  <div class="toolbar">
+    <input class="filter" id="site-filter" type="search" aria-label="Filter websites" placeholder="Filter...">
+    <div class="toolbar-actions">
+      <a class="primary" th:href="@{/sites/new}">Add website</a>
+    </div>
+  </div>
+  <section class="site-grid" aria-label="Websites">
+    <article class="site-card" th:each="card : ${cards}" th:attr="data-name=${card.site.hostname}">
+      <a th:href="@{/sites/{id}(id=${card.site.id})}" class="card-link">
+        <svg class="sparkline" viewBox="0 0 300 150" role="img" aria-label="Daily pageviews for 30 days" th:data-values="${card.series}">
+          <g class="grid"></g>
+          <path class="spark-area"></path>
+          <path class="spark-line"></path>
+        </svg>
+        <div class="card-footer">
+          <span th:text="${card.site.hostname}">example.com</span>
+          <strong th:text="${card.visitors}">0</strong>
+        </div>
+      </a>
+      <span class="metric-caption">visitors in 30 days</span>
+    </article>
+  </section>
+  <div th:if="${#lists.isEmpty(cards)}" class="empty-state">
+    <h1>No websites yet</h1>
+    <p>Add a domain to get an installation script and start collecting pageviews.</p>
+    <a class="primary" th:href="@{/sites/new}">Add website</a>
+  </div>
+</main>
+<script th:src="@{/js/dashboard.js}" defer></script>
+</body>
+</html>
