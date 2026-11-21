@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${site.hostname} + ' · Homelab Analytics'">Domain</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="detail-page">
+  <div class="domain-heading">
+    <div>
+      <a class="back" th:href="@{/}">← Websites</a>
+      <h1 th:text="${site.hostname}">example.com</h1>
+    </div>
+    <div class="period">
+      <a th:href="@{/sites/{id}(id=${site.id},days=7)}">7d</a>
+      <a class="active" th:href="@{/sites/{id}(id=${site.id},days=${days})}" th:text="${days} + 'd'">30d</a>
+      <a th:href="@{/sites/{id}/edit(id=${site.id})}">Settings</a>
+    </div>
+  </div>
+  <section class="totals" aria-label="Totals">
+    <div><span>Visitors</span><strong th:text="${visitors}">0</strong></div>
+    <div><span>Pageviews</span><strong th:text="${pageviews}">0</strong></div>
+  </section>
+  <section class="chart-panel">
+    <svg class="main-chart" viewBox="0 0 1000 330" role="img" aria-label="Daily visitors and pageviews chart" th:data-values="${series}">
+      <g class="chart-grid"></g>
+      <path class="chart-area"></path>
+      <path class="chart-line"></path>
+    </svg>
+  </section>
+  <section class="breakdowns">
+    <article>
+      <h2>Referrals</h2>
+      <div class="rank-row" th:each="row : ${referrals}">
+        <strong th:text="${row.count}">0</strong><span th:text="${row.name}">Direct</span>
+      </div>
+    </article>
+    <article>
+      <h2>Pages</h2>
+      <div class="rank-row" th:each="row : ${pages}">
+        <strong th:text="${row.count}">0</strong><span th:text="${row.name}">/</span>
+      </div>
+    </article>
+    <article>
+      <h2>Devices</h2>
+      <div class="bar-row" th:each="row : ${devices}">
+        <span th:text="${row.name}">Desktop</span>
+        <div class="bar"><i th:style="'width:' + ${row.count * 100 / denominator} + '%'"></i></div>
+        <strong th:text="${row.count * 100 / denominator} + '%'">0%</strong>
+      </div>
+      <h2>Browsers</h2>
+      <div class="bar-row" th:each="row : ${browsers}">
+        <span th:text="${row.name}">Chrome</span>
+        <div class="bar"><i th:style="'width:' + ${row.count * 100 / denominator} + '%'"></i></div>
+        <strong th:text="${row.count * 100 / denominator} + '%'">0%</strong>
+      </div>
+    </article>
+    <article>
+      <h2>Countries</h2>
+      <div class="bar-row" th:each="row : ${countries}">
+        <span th:text="${row.name}">Unknown</span>
+        <div class="bar"><i th:style="'width:' + ${row.count * 100 / denominator} + '%'"></i></div>
+        <strong th:text="${row.count * 100 / denominator} + '%'">0%</strong>
+      </div>
+    </article>
+  </section>
+  <p class="method-note">Visitor estimates count arrival pageviews, not exact people. Countries are approximate from browser timezone.</p>
+</main>
+<script th:src="@{/js/dashboard.js}" defer></script>
+</body>
+</html>

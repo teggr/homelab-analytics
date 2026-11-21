@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Website · Homelab Analytics</title>
+  <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<header th:replace="~{fragments :: header}"></header>
+<main class="page narrow">
+  <h1 th:text="${editing} ? 'Edit website' : 'Add website'">Add website</h1>
+  <form class="site-form" th:action="${editing} ? @{/sites/{id}(id=${site.id})} : @{/sites}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    <label for="hostname">Canonical hostname</label>
+    <input id="hostname" name="hostname" th:value="${site.hostname}" placeholder="analytics.example.com" required>
+    <label for="aliases">Allowed aliases, comma or line separated</label>
+    <textarea id="aliases" name="aliases" th:text="${site.aliases}" placeholder="www.example.com"></textarea>
+    <label for="zone">Reporting zone</label>
+    <input id="zone" name="reportingZone" th:value="${site.reportingZone}" required>
+    <label for="excluded">Excluded pathname patterns</label>
+    <textarea id="excluded" name="excludedPaths" th:text="${site.excludedPaths}" placeholder="/admin/*&#10;/private"></textarea>
+    <button class="primary" type="submit" th:text="${editing} ? 'Save website' : 'Add website'">Add website</button>
+  </form>
+  <section th:if="${editing}" class="install-box">
+    <h2>Installation</h2>
+    <code th:text="'&lt;script async src=&quot;https://analytics.example.com/tracker.js&quot; data-site=&quot;' + ${site.publicKey} + '&quot;&gt;&lt;/script&gt;'"></code>
+  </section>
+</main>
+</body>
+</html>

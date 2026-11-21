@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header th:fragment="header" class="topbar">
+  <a class="brand" href="/"><span class="brand-mark">H</span><span>Homelab Analytics</span></a>
+  <nav aria-label="Primary">
+    <a href="/" class="active"><span aria-hidden="true">▥</span> Websites</a>
+    <form th:action="@{/logout}" method="post" class="logout-form">
+      <button type="submit" class="link-button">Account</button>
+    </form>
+  </nav>
+</header>
+</body>
+</html>
